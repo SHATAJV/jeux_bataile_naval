@@ -11,7 +11,7 @@ Battleship (also known as Battleships) is a strategy type guessing game for two 
   and the objective of the game is to destroy the opposing player's fleet.
 """
 """
-class board = class of print board of gmae 
+class board = class of print board of game
 """
 
 
@@ -21,17 +21,16 @@ class Board:
         self.grid = [['~' for _ in range(size)] for _ in range(size)]
         self.attacked_positions = set()
 
-    def display(self, ships=None,reveal_ships=False):
+    def display(self, ships=None, reveal_ships=False):
 
         for row in range(self.size):
             for col in range(self.size):
                 if (row, col) in self.attacked_positions:
                     print('x')
-                elif reveal_ships and ships and any((row,col)in ship.positions for ship in ship.values()):
+                elif reveal_ships and ships and any((row, col) in ships.positions for ships in ships.values()):
                     print('S')
                 else:
-                    print(self.grid(col, row), end='')
-
+                    print(self.grid, end='')
 
     def attack_position(self, row, col):
         if (row, col) in self.attacked_positions:
@@ -63,7 +62,7 @@ class BattleshipGame:
         self.ships = {name: Ship(name, positions) for name, positions in ships.items()}
 
     def all_ships_sunk(self):
-        return all(ship.is_sunk() for ship in self.ships.values())
+        return all(ships.is_sunk() for ships in self.ships.values())
 
     def play(self):
         while True:
@@ -76,8 +75,8 @@ class BattleshipGame:
                     continue
 
                 hit_any_ship = False
-                for ship in self.ships.values():
-                    hit, message = ship.attack(row, col)
+                for ships in self.ships.values():
+                    hit, message = ships.attack(row, col)
                     if hit:
                         hit_any_ship = True
                         print(message)
@@ -85,29 +84,29 @@ class BattleshipGame:
 
                 if not hit_any_ship:
                     print("Miss!")
+                    self.board.display(ships=self.ships, reveal_ships=False)
 
                 if self.all_ships_sunk():
                     self.board.display(reveal_ships=True)
                     print("All ships have been sunk! You win!")
+                    self.board.display(ships=self.ships, reveal_ships=False)
                     break
             except (ValueError, SyntaxError, NameError, IndexError):
                 print("Invalid input format. Please enter coordinates like C2.")
 
-def main():
-        ships = {
-            'aircraft carrier': [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
-            'cruiser': [(3, 0), (4, 0), (5, 0), (6, 0)],
-            'destroyer': [(4, 2), (5, 2), (6, 2)],
-            'submarine': [(4, 7), (4, 8), (4, 9)],
-            'torpedo boat': [(8, 4), (8, 5)]
-        }
-        game = BattleshipGame(board_size=10, ships=ships)
-        board = Board(size=10)
-        game.play()
-        board.display()
 
+def main():
+    ships = {
+        'aircraft carrier': [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
+        'cruiser': [(3, 0), (4, 0), (5, 0), (6, 0)],
+        'destroyer': [(4, 2), (5, 2), (6, 2)],
+        'submarine': [(4, 7), (4, 8), (4, 9)],
+        'torpedo boat': [(8, 4), (8, 5)]
+    }
+    game = BattleshipGame(board_size=10, ships=ships)
+
+    game.play()
 
 
 if __name__ == "__main__":
     main()
-
