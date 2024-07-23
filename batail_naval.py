@@ -25,7 +25,7 @@ class Board:
         """
         Display the current state of the board.
 
-        :param ships: Dictionary of ships to reveal their positions (optional)
+        :param ships: Dictionary of ships to reveal their positions 
         :param reveal_ships: Boolean flag to reveal ship positions
         """
         # Print column headers
@@ -90,6 +90,8 @@ class Ship:
         """
         if (row, col) in self.positions:
             self.hit_positions.add((row, col))
+            if self.is_sunk():
+                return True, f"{self.name} has been sunk"
             return True, f"Hit on {self.name}!"
         return False, "Miss!"
 
@@ -137,7 +139,6 @@ class BattleshipGame:
 
                 if not hit_any_ship:
                     print("Miss!")
-
 
                 if self.all_ships_sunk():
                     self.board.display(ships=self.ships, reveal_ships=True)
