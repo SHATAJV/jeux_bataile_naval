@@ -56,6 +56,12 @@ class ship:
        return False, "Miss!"
 
 
+class battaleshipgame :
+    def __init__(self, board_size, ships):
+        self.board = Board(board_size)
+        self.ships = {name: Ship(name, positions) for name, positions in ships.items()}
+    def all_ships_sunk(self):
+        return all(ship.is_sunk() for ship in self.ships.values())
 
-# Function to display the board
+
 
