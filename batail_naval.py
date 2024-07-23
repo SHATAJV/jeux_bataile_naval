@@ -49,6 +49,12 @@ class ship:
    def is_sunk(self):
        return all(pos in self.hit_positions for pos in self.positions)
 
+   def attack(self, row, col):
+       if (row, col) in self.positions:
+           self.hit_positions.add((row, col))
+           return True, f"Hit on {self.name}!"
+       return False, "Miss!"
+
 
 
 # Function to display the board
