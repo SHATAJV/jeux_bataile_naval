@@ -19,25 +19,28 @@ class Board:
     def __init__(self, size):
         """
         Initialize the board with the given size.
-
         :param size: Size of the board (size x size)
         """
         self.size = size
-        self.grid = [['_' for _ in range(size)] for _ in range(size)]
+        self.grid = [['-' for _ in range(size)] for _ in range(size)]
         self.attacked_positions = set()
 
     def display(self, ships=None, reveal_ships=False):
         """
         Display the current state of the board.
-
-        :param ships: Dictionary of ships to reveal their positions 
+        :param ships: Dictionary of ships to reveal their positions (optional)
         :param reveal_ships: Boolean flag to reveal ship positions
         """
+        # Print column headers
+        print("  " + " ".join(chr(c) for c in range(65, 65 + self.size)))
         for row in range(self.size):
+            # Print row header
+            print(f"{row + 1:2}", end=" ")
             for col in range(self.size):
                 if (row, col) in self.attacked_positions:
                     print('X', end=' ')
-
+                elif reveal_ships and ships and any((row, col) in ship.positions for ship in ships.values()):
+                    print('S', end=' ')
                 else:
                     print(self.grid[row][col], end=' ')
             print()
@@ -46,7 +49,6 @@ class Board:
     def attack_position(self, row, col):
         """
         Attack a position on the board.
-
         :param row: Row index
         :param col: Column index
         :return: True if the position was not previously attacked, False otherwise
@@ -58,12 +60,19 @@ class Board:
         self.grid[row][col] = 'X'
         return True
 
+    def mark_miss(self, row, col):
+        """
+        Mark a missed attack on the board.
+        :param row: Row index
+        :param col: Column index
+        """
+        self.grid[row][col] = 'O'
+
 
 class Ship:
     def __init__(self, name, positions):
         """
         Initialize a ship with its name and positions.
-
         :param name: Name of the ship
         :param positions: List of positions occupied by the ship
         """
@@ -71,18 +80,18 @@ class Ship:
         self.positions = positions
         self.hit_positions = set()
 
+
     def is_sunk(self):
         """
         Check if the ship is sunk.
-
         :return: True if the ship is sunk, False otherwise
         """
         return all(pos in self.hit_positions for pos in self.positions)
 
+
     def attack(self, row, col):
         """
         Attack a position on the ship.
-
         :param row: Row index
         :param col: Column index
         :return: Tuple (hit, message) where hit is True if the ship is hit, and message is the result message
@@ -97,7 +106,6 @@ class BattleshipGame:
     def __init__(self, board_size, ships):
         """
         Initialize the Battleship game with a board and ships.
-
         :param board_size: Size of the board
         :param ships: Dictionary of ship names and their positions
         """
@@ -107,10 +115,10 @@ class BattleshipGame:
     def all_ships_sunk(self):
         """
         Check if all ships are sunk.
-
         :return: True if all ships are sunk, False otherwise
         """
         return all(ship.is_sunk() for ship in self.ships.values())
+
 
     def play(self):
         """
@@ -122,10 +130,8 @@ class BattleshipGame:
                 coordinates = input("Enter attack coordinates (e.g., C2): ").strip()
                 col = ord(coordinates[0].upper()) - 65
                 row = int(coordinates[1:]) - 1
-
                 if not self.board.attack_position(row, col):
                     continue
-
                 hit_any_ship = False
                 for ship in self.ships.values():
                     hit, message = ship.attack(row, col)
@@ -133,12 +139,9 @@ class BattleshipGame:
                         hit_any_ship = True
                         print(message)
                         break
-
                 if not hit_any_ship:
                     print("Miss!")
-
-                # Display the board after each attack
-
+                    self.board.mark_miss(row, col)
 
                 if self.all_ships_sunk():
                     self.board.display(ships=self.ships, reveal_ships=True)
@@ -165,3 +168,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
