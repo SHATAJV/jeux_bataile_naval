@@ -10,15 +10,11 @@ Battleship (also known as Battleships) is a strategy type guessing game for two 
  Players alternate turns calling "shots" at the other player's ships,
   and the objective of the game is to destroy the opposing player's fleet.
 """
-"""
-class board = class of print board of game
-"""
-
-
 class Board:
     def __init__(self, size):
         """
         Initialize the board with the given size.
+
         :param size: Size of the board (size x size)
         """
         self.size = size
@@ -28,6 +24,7 @@ class Board:
     def display(self, ships=None, reveal_ships=False):
         """
         Display the current state of the board.
+
         :param ships: Dictionary of ships to reveal their positions (optional)
         :param reveal_ships: Boolean flag to reveal ship positions
         """
@@ -38,7 +35,7 @@ class Board:
             print(f"{row + 1:2}", end=" ")
             for col in range(self.size):
                 if (row, col) in self.attacked_positions:
-                    print('X', end=' ')
+                    print(self.grid[row][col], end=' ')
                 elif reveal_ships and ships and any((row, col) in ship.positions for ship in ships.values()):
                     print('S', end=' ')
                 else:
@@ -46,33 +43,28 @@ class Board:
             print()
         print()
 
-    def attack_position(self, row, col):
+    def attack_position(self, row, col, hit):
         """
         Attack a position on the board.
+
         :param row: Row index
         :param col: Column index
+        :param hit: True if the attack was a hit, False if it was a miss
         :return: True if the position was not previously attacked, False otherwise
         """
         if (row, col) in self.attacked_positions:
             print(f"It has been attacked already at ({row + 1}, {chr(col + 65)}). Please try again.")
             return False
         self.attacked_positions.add((row, col))
-        self.grid[row][col] = 'X'
+        self.grid[row][col] = 'X' if hit else 'O'
         return True
-
-    def mark_miss(self, row, col):
-        """
-        Mark a missed attack on the board.
-        :param row: Row index
-        :param col: Column index
-        """
-        self.grid[row][col] = 'O'
 
 
 class Ship:
     def __init__(self, name, positions):
         """
         Initialize a ship with its name and positions.
+
         :param name: Name of the ship
         :param positions: List of positions occupied by the ship
         """
@@ -80,18 +72,18 @@ class Ship:
         self.positions = positions
         self.hit_positions = set()
 
-
     def is_sunk(self):
         """
         Check if the ship is sunk.
+
         :return: True if the ship is sunk, False otherwise
         """
         return all(pos in self.hit_positions for pos in self.positions)
 
-
     def attack(self, row, col):
         """
         Attack a position on the ship.
+
         :param row: Row index
         :param col: Column index
         :return: Tuple (hit, message) where hit is True if the ship is hit, and message is the result message
@@ -106,6 +98,7 @@ class BattleshipGame:
     def __init__(self, board_size, ships):
         """
         Initialize the Battleship game with a board and ships.
+
         :param board_size: Size of the board
         :param ships: Dictionary of ship names and their positions
         """
@@ -115,10 +108,10 @@ class BattleshipGame:
     def all_ships_sunk(self):
         """
         Check if all ships are sunk.
+
         :return: True if all ships are sunk, False otherwise
         """
         return all(ship.is_sunk() for ship in self.ships.values())
-
 
     def play(self):
         """
@@ -130,8 +123,7 @@ class BattleshipGame:
                 coordinates = input("Enter attack coordinates (e.g., C2): ").strip()
                 col = ord(coordinates[0].upper()) - 65
                 row = int(coordinates[1:]) - 1
-                if not self.board.attack_position(row, col):
-                    continue
+
                 hit_any_ship = False
                 for ship in self.ships.values():
                     hit, message = ship.attack(row, col)
@@ -139,9 +131,13 @@ class BattleshipGame:
                         hit_any_ship = True
                         print(message)
                         break
+
+                if not self.board.attack_position(row, col, hit_any_ship):
+                    continue
+
                 if not hit_any_ship:
                     print("Miss!")
-                    self.board.mark_miss(row, col)
+
 
                 if self.all_ships_sunk():
                     self.board.display(ships=self.ships, reveal_ships=True)
@@ -149,7 +145,6 @@ class BattleshipGame:
                     break
             except (ValueError, SyntaxError, NameError, IndexError):
                 print("Invalid input format. Please enter coordinates like C2.")
-
 
 def main():
     """
@@ -165,7 +160,7 @@ def main():
     game = BattleshipGame(board_size=10, ships=ships)
     game.play()
 
-
 if __name__ == "__main__":
+
     main()
 
