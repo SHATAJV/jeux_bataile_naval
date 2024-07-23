@@ -37,8 +37,7 @@ class Board:
             for col in range(self.size):
                 if (row, col) in self.attacked_positions:
                     print('X', end=' ')
-                elif reveal_ships and ships and any((row, col) in ship.positions for ship in ships.values()):
-                    print('S', end=' ')
+
                 else:
                     print(self.grid[row][col], end=' ')
             print()
@@ -139,7 +138,7 @@ class BattleshipGame:
                     print("Miss!")
 
                 # Display the board after each attack
-                self.board.display(ships=self.ships, reveal_ships=False)
+
 
                 if self.all_ships_sunk():
                     self.board.display(ships=self.ships, reveal_ships=True)
