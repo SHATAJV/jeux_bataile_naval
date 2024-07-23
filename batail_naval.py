@@ -21,9 +21,17 @@ class Board:
         self.grid = [['~' for _ in range(size)] for _ in range(size)]
         self.attacked_positions = set()
 
-    def display(self, reveal_ships=False):
-        # Logique pour afficher le plateau
-        pass
+    def display(self, ships=None,reveal_ships=False):
+
+        for row in range(self.size):
+            for col in range(self.size):
+                if (row, col) in self.attacked_positions:
+                    print('x')
+                elif reveal_ships and ships and any((row,col)in ship.positions for ship in ship.values()):
+                    print('S')
+                else:
+                    print(self.grid(col, row), end='')
+
 
     def attack_position(self, row, col):
         if (row, col) in self.attacked_positions:
