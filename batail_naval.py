@@ -85,4 +85,21 @@ class BattleshipGame:
             except (ValueError, SyntaxError, NameError, IndexError):
                 print("Invalid input format. Please enter coordinates like C2.")
 
+def main():
+        ships = {
+            'aircraft carrier': [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
+            'cruiser': [(3, 0), (4, 0), (5, 0), (6, 0)],
+            'destroyer': [(4, 2), (5, 2), (6, 2)],
+            'submarine': [(4, 7), (4, 8), (4, 9)],
+            'torpedo boat': [(8, 4), (8, 5)]
+        }
+        game = BattleshipGame(board_size=10, ships=ships)
+        board = Board(size=10)
+        game.play()
+        board.display()
+
+
+
+if __name__ == "__main__":
+    main()
 
