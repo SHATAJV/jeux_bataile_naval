@@ -9,9 +9,36 @@ Battleship (also known as Battleships) is a strategy type guessing game for two 
  The locations of the fleets are concealed from the other player.
  Players alternate turns calling "shots" at the other player's ships, and the objective of the game is to destroy the opposing player's fleet.
 """
+"""
+class board = class of print board of gmae 
+"""
+class board :
+    """
 
-def init_board(size):
-    return [['-' for _ in range(size)] for _ in range(size)]
+    method of create board
+    Args:
+        size (int): size of board game.
+        grid (list): place of board
+
+
+    """
+    def __init__(self, size):
+        self.size = size
+        self.grid = [['-' for _ in range(size)] for _ in range(size)]
+        self.attack_position= set()
+
+
+   def display(self, reveal_ships=False):
+
+      pass
+
+
+def attack_position(self, row, col):
+    if (row, col) in self.attacked_positions:
+        print(f"It has been attacked already at ({row + 1}, {chr(col + 65)}). Please try again.")
+        return False
+    self.attacked_positions.add((row, col))
+    return True
 
 
 # Function to place ships on the board and track their positions
