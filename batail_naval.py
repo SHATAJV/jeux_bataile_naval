@@ -10,6 +10,8 @@ Battleship (also known as Battleships) is a strategy type guessing game for two 
  Players alternate turns calling "shots" at the other player's ships,
   and the objective of the game is to destroy the opposing player's fleet.
 """
+
+
 class Board:
     def __init__(self, size):
         """
@@ -25,7 +27,7 @@ class Board:
         """
         Display the current state of the board.
 
-        :param ships: Dictionary of ships to reveal their positions 
+        :param ships: Dictionary of ships to reveal their positions
         :param reveal_ships: Boolean flag to reveal ship positions
         """
         # Print column headers
@@ -147,6 +149,7 @@ class BattleshipGame:
             except (ValueError, SyntaxError, NameError, IndexError):
                 print("Invalid input format. Please enter coordinates like C2.")
 
+
 def main():
     """
     Main function to set up and start the Battleship game.
@@ -161,7 +164,7 @@ def main():
     game = BattleshipGame(board_size=10, ships=ships)
     game.play()
 
+
 if __name__ == "__main__":
 
     main()
-
